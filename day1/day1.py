@@ -1,4 +1,3 @@
-import os
 
 def read_input(file_name: str) -> list[str]:
     array = []
@@ -24,14 +23,28 @@ def get_elves_calories(calories_array: list[str]) -> list[int]:
 
 def get_max_index(array: list[int]) -> (int,int):
     max_value = max(array)
-    return array.index(max_value) + 1, max_value
+    return array.index(max_value), max_value
 
+def get_three_max_values(array: list[int]) -> int:
+    max_values = 3
+
+    sum = 0
+    for i in range(3):
+        index, value = get_max_index(array)
+        sum += value
+        array.pop(index)
+
+    return sum
         
 def main() -> None:
     input = read_input('day1/input.txt')
     calories_sum = get_elves_calories(input)
+
     max_index, max_value = get_max_index(calories_sum)
-    print(f'The elf with most calories is {max_index} with {max_value}')
+    print(f'The elf with most calories is {max_index + 1} with {max_value}')
+
+    sum_three_elves = get_three_max_values(calories_sum)
+    print(f'The elves with more calories sum {sum_three_elves}')
 
 
 if __name__ == "__main__":
