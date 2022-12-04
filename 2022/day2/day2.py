@@ -100,7 +100,7 @@ def get_total_points_part2(strategy) -> int:
 
 
 def main() -> None:
-    strategy = read_input('day2/input.txt')
+    strategy = read_input('2022/day2/input.txt')
 
     points = get_total_points_part1(strategy)
 

@@ -37,7 +37,7 @@ def get_three_max_values(array: list[int]) -> int:
     return sum
         
 def main() -> None:
-    input = read_input('day1/input.txt')
+    input = read_input('2022/day1/input.txt')
     calories_sum = get_elves_calories(input)
 
     max_index, max_value = get_max_index(calories_sum)

@@ -36,7 +36,7 @@ def get_intersections_sum(sections_assingment: np.matrix) -> int:
 
 
 def main() -> None:
-    sections_assingment = read_input('day4/input.txt')
+    sections_assingment = read_input('2022/day4/input.txt')
 
     intersections, overlap = get_intersections_sum(sections_assingment)
 

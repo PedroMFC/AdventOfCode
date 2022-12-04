@@ -1,4 +1,4 @@
 # AdventOfCode2022
-Solutions to https://adventofcode.com/ in 2022
+Solutions to https://adventofcode.com/
 
-* Language: Python
+* [Year 2022](2022): Python.

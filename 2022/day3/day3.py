@@ -53,7 +53,7 @@ def get_group_priority_sum(rucksack: np.matrix) -> int:
 
 
 def main() -> None:
-    rucksack = read_input('day3/input.txt')
+    rucksack = read_input('2022/day3/input.txt')
 
     priority_sum = get_priority_sum(rucksack)
 
