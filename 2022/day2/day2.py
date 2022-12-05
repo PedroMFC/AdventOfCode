@@ -1,4 +1,5 @@
 import numpy as np
+import typing
 
 encrypted_first = {
     'A': 'Rock',
@@ -83,18 +84,10 @@ def get_points_part2(first: str, second: str) -> int:
     return points[end_strategy[second]] + points[choose]
 
 
-def get_total_points_part1(strategy) -> int:
+def get_total_points_part(strategy: np.matrix, func: typing.Callable[[str, str], int]) -> int:
     points = 0
     for match in strategy:
-        points += get_points_part1(match[0],match[1])
-
-    return points
-
-def get_total_points_part2(strategy) -> int:
-    points = 0
-    for match in strategy:
-        points += get_points_part2(match[0],match[1])
-        parada = 0
+        points += func(match[0],match[1])
 
     return points
 
@@ -102,11 +95,11 @@ def get_total_points_part2(strategy) -> int:
 def main() -> None:
     strategy = read_input('2022/day2/input.txt')
 
-    points = get_total_points_part1(strategy)
+    points = get_total_points_part(strategy, get_points_part1)
 
     print(f'The score in part 1 is {points}')
 
-    points2 = get_total_points_part2(strategy)
+    points2 = get_total_points_part(strategy, get_points_part2)
 
     print(f'The score in part2 1 is {points2}')
 
