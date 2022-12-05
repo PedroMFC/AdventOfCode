@@ -21,7 +21,7 @@ def get_elves_calories(calories_array: list[str]) -> list[int]:
 
     return calories_sum
 
-def get_max_index(array: list[int]) -> (int,int):
+def get_max_index(array: list[int]) -> tuple[int,int]:
     max_value = max(array)
     return array.index(max_value), max_value
 
