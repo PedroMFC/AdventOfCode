@@ -12,9 +12,9 @@ def get_stacks(stack_input: list[str]) -> list[list[str]]:
 
     for line in stack_input:
         for i in range(number_stacks):
-            crane = line[i*4 + 1]
-            if crane != ' ':
-                stacks[i].append(crane)
+            crate = line[i*4 + 1]
+            if crate != ' ':
+                stacks[i].append(crate)
 
     return stacks
 
