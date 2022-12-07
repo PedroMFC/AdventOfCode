@@ -13,10 +13,10 @@ def get_marker_start(datastream: str, group_length: int) -> int:
 
 
     for i in range(len(datastream)):
-        group = datastream[marker_start + i: marker_start + i + group_length]
+        group = datastream[marker_start: marker_start + group_length]
         non_repeated_characters = set([*group])
         if len(non_repeated_characters) == group_length:
-            marker_start += group_length + i
+            marker_start += group_length
             break
         marker_start +=1
 
@@ -33,7 +33,7 @@ def main() -> None:
 
     message_start = get_marker_start(datastream, 14)
 
-    print(f'characters before the first start-of-message marker is detected: {message_start-1}')
+    print(f'characters before the first start-of-message marker is detected: {message_start}')
 
 if __name__ == "__main__":
     main()
