@@ -5,24 +5,56 @@ def read_input(file_name: str) -> Tree:
     with open(file_name) as file:
         lines = [ line[:-1] for line in file ]
 
-    tree = read_tree(lines, 0)
+
+    tree = Tree('/')
+    tree = read_tree(tree, lines, 1)
 
     return tree
 
-def read_tree(lines: list[str], contador: int) -> tuple[Tree,int]:
-    tree = None
-    mi_contador = contador
+def read_tree(tree_padre: Tree, lines: list[str], contador: int) -> tuple[Tree,int]:
 
-    if re.search('\$ cd ((?!..).+)', lines[mi_contador]):
-        contador +=1
-        tree, mi_contador = read_tree(lines, mi_contador)
-    elif re.search('', lines[mi_contador])
-    else: # re.search('\$ cd ..', lines[mi_contador]):
-        return tree, mi_contador
+    if contador >= len(lines):
+        return tree_padre, contador
+
+    match = re.search('\$ cd ((?!\.\.).+)', lines[contador])
+    if match is not None:
+        tree_hijo = Tree(match.group(1)) 
+        tree_hijo, contador = read_tree(tree_hijo, lines, contador + 1)
+        tree_padre.add_children(tree_hijo)
+
+        tree_padre, contador = read_tree(tree_padre, lines, contador + 1)
+
+        return tree_padre, contador
+
+
+    match = re.search('\$ ls', lines[contador])
+    if match is not None:
+        tree_padre, contador = read_tree(tree_padre, lines, contador + 1)
+
+        return tree_padre, contador
+
+    match = re.search('(\d+) ((.|\.)+)', lines[contador])
+    if match is not None:
+        tree_archivo = Tree(match.group(2), match.group(1))
+        tree_padre.add_children(tree_archivo)
+
+        tree_padre, contador = read_tree(tree_padre, lines, contador + 1)
+
+        return tree_padre, contador
+
+    match = re.search('dir (.+)', lines[contador])
+    if match is not None:
+        tree_padre, contador = read_tree(tree_padre, lines, contador + 1)
+
+        return tree_padre, contador
+
+    return tree_padre, contador
     
 
 def main() -> None:
     file_system = read_input('2022/day7/input.txt')
+
+    parada = 0
 
 
 if __name__ == "__main__":
