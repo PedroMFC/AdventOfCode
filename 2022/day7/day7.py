@@ -48,7 +48,7 @@ def read_tree(tree_padre: Tree, lines: list[str], contador: int) -> tuple[Tree,i
 
         return tree_padre, contador
 
-    return tree_padre, contador
+    return tree_padre, contador # cd ..
 
 def get_sizes(tree: Tree) -> list[int]:
     sizes = []
@@ -61,6 +61,20 @@ def get_sizes(tree: Tree) -> list[int]:
                 sizes.append(size_child)
 
     return sizes
+
+def get_directory_to_delete(sizes: list[int]) -> int:
+    max_space = 70000000
+    spaced_needed = 30000000
+    unused_space = max_space - max(sizes)
+    space_to_free = spaced_needed - unused_space
+
+    result_space_free = [ size - space_to_free for size in sizes ]
+
+    result_space_free.sort(key= lambda size: max_space if size < 0 else size) # max_space is random. We want e a huge number that discard (send to last positions) sizes that will not give us enough space
+
+    return result_space_free[0] + space_to_free # Recover size of the direcotry
+
+
     
 def get_sizes_most(sizes: list[int], max: int) -> int:
     sum = 0
@@ -79,6 +93,10 @@ def main() -> None:
     sizes_most_100000 = get_sizes_most(sizes, 100000)
 
     print(f'The sum  of directories with size at most 100000 is {sizes_most_100000}')
+
+    directory_to_delete = get_directory_to_delete(sizes)
+
+    print(f'The directory to delete has size {directory_to_delete}')
 
 if __name__ == "__main__":
     main()
