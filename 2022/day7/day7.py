@@ -7,7 +7,7 @@ def read_input(file_name: str) -> Tree:
 
 
     tree = Tree('/')
-    tree = read_tree(tree, lines, 1)
+    tree, contador = read_tree(tree, lines, 1)
 
     return tree
 
@@ -35,7 +35,7 @@ def read_tree(tree_padre: Tree, lines: list[str], contador: int) -> tuple[Tree,i
 
     match = re.search('(\d+) ((.|\.)+)', lines[contador])
     if match is not None:
-        tree_archivo = Tree(match.group(2), match.group(1))
+        tree_archivo = Tree(match.group(2), int(match.group(1)))
         tree_padre.add_children(tree_archivo)
 
         tree_padre, contador = read_tree(tree_padre, lines, contador + 1)
@@ -49,13 +49,36 @@ def read_tree(tree_padre: Tree, lines: list[str], contador: int) -> tuple[Tree,i
         return tree_padre, contador
 
     return tree_padre, contador
+
+def get_sizes(tree: Tree) -> list[int]:
+    sizes = []
+
+    if not tree.is_node():
+        sizes.append(tree.get_size())
+        for child in tree.get_children():
+            sizes_child = get_sizes(child)
+            for size_child in sizes_child:
+                sizes.append(size_child)
+
+    return sizes
     
+def get_sizes_most(sizes: list[int], max: int) -> int:
+    sum = 0
+
+    for size in sizes:
+        if size < max:
+            sum += size
+
+    return sum
+
 
 def main() -> None:
     file_system = read_input('2022/day7/input.txt')
 
-    parada = 0
+    sizes = get_sizes(file_system)
+    sizes_most_100000 = get_sizes_most(sizes, 100000)
 
+    print(f'The sum  of directories with size at most 100000 is {sizes_most_100000}')
 
 if __name__ == "__main__":
     main()

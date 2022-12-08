@@ -15,7 +15,7 @@ class Tree:
         return self.children
 
     def is_node(self):
-        return self.size == 0
+        return self.size != 0
 
     def get_size(self):
         size = 0
