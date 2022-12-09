@@ -29,30 +29,55 @@ def make_move(direction: str, row: int, column: int) -> np.matrix:
     return row, column
 
 
-def calculate_tail_move(row: int, column: int, new_row: int, new_column: int) -> tuple[int, int]:
-    if abs(row - new_row) + abs(column -new_column) <= 1: # T does not move because it touches H in the same
-        return row, column
+def calculate_tail_move(t_row: int, t_column: int, h_row: int, h_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
+    new_t_row = None
+    new_t_colum = None
 
-    if abs(row - new_row) + abs(column -new_column) >= 2:
 
-    return new_row, new_column
+    # Case H moves same row
+    if h_row == new_h_row:
+        if t_column == new_h_column:
+            new_t_row = t_row
+             
+        tail_row = row
+        if new_column < column:
+            tail_colum = new_column + 1
+        else:
+            tail_colum = new_column - 1 
+
+    # Case same column
+    elif column == new_column:
+        tail_colum = column
+        if new_row < row:
+            tail_row = new_row + 1
+        else:
+            tail_row = new_row - 1
+    # Diagonal -> keeps H position
+    else:
+        tail_row = row
+        tail_colum = column
+
+
+    return new_t_row, new_t_colum
 
 def follow_motions(motions: list[list[str]]) -> np.matrix:
     space = np.zeros((500, 500))
 
-    row = 0
-    column = 0
-    space = mark_as_visited(space, row, column)
+    h_row = 0
+    h_column = 0
+    t_row = 0
+    t_column = 0
+    space = mark_as_visited(space, t_row, t_column)
 
     for move in motions:
         for steps in range(int(move[1])):
-            new_row, new_colum = make_move(move[0], row, column)
+            new_h_row, new_h_colum = make_move(move[0], row, column)
 
-            tail_row, tail_column = calculate_tail_move(row, column, new_row, new_colum)
-            space = mark_as_visited(space, tail_row, tail_column)
+            t_row, t_column = calculate_tail_move(t_row,t_column, h_row, h_column, new_h_row, new_h_colum)
+            space = mark_as_visited(space, t_row, t_column)
 
-            row = new_row
-            column = new_colum
+            h_row = new_h_row
+            h_column = new_h_colum
 
     return space
 
