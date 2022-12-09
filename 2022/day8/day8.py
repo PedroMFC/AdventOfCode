@@ -8,6 +8,7 @@ def read_input(file_name: str) -> list[list[int]]:
 
     return grid
 
+# PART 1: VISIBILITY FUNCTIONS
 
 def is_edge_tree(grid: list[list[int]], row: int, column: int) -> bool:
     return row == 0 or column == 0 or row == len(grid) - 1 or column == len(grid[row]) - 1
@@ -59,8 +60,6 @@ def get_visible_trees(grid: list[list[int]]) -> int:
 
     for i, row in enumerate(grid):
         for j, value in enumerate(grid[i]):
-            if i == 2 and j == 3:
-                parada = 0 
             if is_visible(grid, i, j):
                 visible_trees += 1
 
@@ -68,12 +67,81 @@ def get_visible_trees(grid: list[list[int]]) -> int:
     return visible_trees
 
 
+# PART 2: SCORE FCUNTIONS
+def get_score_left(grid: list[int], row: int, column: int) -> int:
+    score = 0
+
+    for index in reversed(range(column)):
+        if grid[row][index] <= grid[row][column]:
+            score += 1
+            if grid[row][index] == grid[row][column]:
+                break
+
+    return score
+
+def get_score_right(grid: list[int], row: int, column: int) -> int:
+    score = 0
+
+    for index in range(column+1, len(grid[row])):
+        if grid[row][index] <= grid[row][column]:
+            score += 1
+            if grid[row][index] == grid[row][column]:
+                break
+
+    return score
+
+def get_score_top(grid: list[int], row: int, column: int) -> int:
+    score = 0
+
+    for index in reversed(range(row)):
+        if grid[row][index] <= grid[row][column]:
+            score += 1
+            if grid[row][index] == grid[row][column]:
+                break
+
+    return score
+
+def get_score_bottom(grid: list[int], row: int, column: int) -> int:
+    score = 0
+
+    for index in range(row+1, len(grid)):
+        if grid[row][index] <= grid[row][column]:
+            score += 1
+            if grid[row][index] == grid[row][column]:
+                break
+
+    return score
+
+def get_score(grid: list[list[int]], row: int, column: int) -> int:
+    return (
+        get_score_left(grid, row, column) *
+        get_score_right(grid, row, column) *
+        get_score_top(grid, row, column) *
+        get_score_bottom(grid, row, column)
+    )
+
+def get_score_trees(grid: list[list[int]]) -> int:
+    scores = []
+
+    for i, row in enumerate(grid):
+        for j, value in enumerate(grid[i]):
+            scores.append(get_score(grid, i, j))
+
+
+    return max(scores)
+
 def main() -> None:
     tree_grid = read_input('2022/day8/input.txt')
 
     visible_trees  = get_visible_trees(tree_grid)
 
     print(f'There are {visible_trees} visible trees')
+
+    max_score = get_score_trees(tree_grid)
+
+    get_score_right(tree_grid, 1, 2)
+
+    print(f'The maximum score is {max_score}')
 
 if __name__ == "__main__":
     main()
