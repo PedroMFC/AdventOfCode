@@ -72,10 +72,9 @@ def get_score_left(grid: list[int], row: int, column: int) -> int:
     score = 0
 
     for index in reversed(range(column)):
-        if grid[row][index] <= grid[row][column]:
-            score += 1
-            if grid[row][index] == grid[row][column]:
-                break
+        score += 1
+        if grid[row][index] >= grid[row][column]:
+            break
 
     return score
 
@@ -83,10 +82,9 @@ def get_score_right(grid: list[int], row: int, column: int) -> int:
     score = 0
 
     for index in range(column+1, len(grid[row])):
-        if grid[row][index] <= grid[row][column]:
-            score += 1
-            if grid[row][index] == grid[row][column]:
-                break
+        score += 1
+        if grid[row][index] >= grid[row][column]:
+            break
 
     return score
 
@@ -94,10 +92,9 @@ def get_score_top(grid: list[int], row: int, column: int) -> int:
     score = 0
 
     for index in reversed(range(row)):
-        if grid[row][index] <= grid[row][column]:
-            score += 1
-            if grid[row][index] == grid[row][column]:
-                break
+        score += 1
+        if grid[index][column] >= grid[row][column]:
+            break
 
     return score
 
@@ -105,10 +102,9 @@ def get_score_bottom(grid: list[int], row: int, column: int) -> int:
     score = 0
 
     for index in range(row+1, len(grid)):
-        if grid[row][index] <= grid[row][column]:
-            score += 1
-            if grid[row][index] == grid[row][column]:
-                break
+        score += 1
+        if grid[index][column] >= grid[row][column]:
+            break
 
     return score
 
@@ -138,8 +134,6 @@ def main() -> None:
     print(f'There are {visible_trees} visible trees')
 
     max_score = get_score_trees(tree_grid)
-
-    get_score_right(tree_grid, 1, 2)
 
     print(f'The maximum score is {max_score}')
 
