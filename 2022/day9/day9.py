@@ -29,66 +29,90 @@ def make_move(direction: str, row: int, column: int) -> np.matrix:
     return row, column
 
 
-def calculate_tail_move(t_row: int, t_column: int, h_row: int, h_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
+def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
     new_t_row = None
-    new_t_colum = None
+    new_t_column = None
 
 
     # Case H moves same row
-    if h_row == new_h_row:
-        if t_column == new_h_column:
+    if t_row == new_h_row:
+        new_t_row = t_row
+        if abs(t_column - new_h_column) <= 1:
+            new_t_column = t_column
+        elif new_h_column < t_column:
+            new_t_column = new_h_column + 1
+        else:
+            new_t_column = new_h_column - 1
+
+    # Case H moves same column
+    elif t_column == new_h_column:
+        new_t_column = t_column
+        if abs(t_row - new_h_row ) <= 1:
             new_t_row = t_row
-             
-        tail_row = row
-        if new_column < column:
-            tail_colum = new_column + 1
+        elif new_h_row < t_row:
+            new_t_row = new_h_row + 1
         else:
-            tail_colum = new_column - 1 
-
-    # Case same column
-    elif column == new_column:
-        tail_colum = column
-        if new_row < row:
-            tail_row = new_row + 1
-        else:
-            tail_row = new_row - 1
-    # Diagonal -> keeps H position
+            new_t_row = new_h_row - 1
+    # Diagonal
     else:
-        tail_row = row
-        tail_colum = column
+        if abs(t_row - new_h_row)  + abs(t_column - new_h_column) <= 2:
+            new_t_row = t_row
+            new_t_column = t_column
 
+        elif abs(t_row - new_h_row) <= 1:
+            new_t_row = new_h_row
 
-    return new_t_row, new_t_colum
+            if new_h_column < t_column:
+                new_t_column = new_h_column + 1
+            else:
+                new_t_column = new_h_column - 1
+        else:
+            new_t_column = new_h_column
 
-def follow_motions(motions: list[list[str]]) -> np.matrix:
-    space = np.zeros((500, 500))
+            if new_h_row < t_row:
+                new_t_row = new_h_row + 1
+            else:
+                new_t_row = new_h_row - 1 
 
-    h_row = 0
-    h_column = 0
-    t_row = 0
-    t_column = 0
-    space = mark_as_visited(space, t_row, t_column)
+    return new_t_row, new_t_column
+
+def follow_motions(motions: list[list[str]], rope_long: int) -> np.matrix:
+    space_size = 500
+
+    space = np.zeros((space_size, space_size))
+
+    rope = [ [space_size//2, space_size //2]  for i in range(rope_long)]
+
+    space = mark_as_visited(space, rope[0][0], rope[0][0])
 
     for move in motions:
         for steps in range(int(move[1])):
-            new_h_row, new_h_colum = make_move(move[0], row, column)
+            new_h_row, new_h_colum = make_move(move[0], rope[0][0], rope[0][1])
+            rope_after_move = [[new_h_row, new_h_colum]]
 
-            t_row, t_column = calculate_tail_move(t_row,t_column, h_row, h_column, new_h_row, new_h_colum)
-            space = mark_as_visited(space, t_row, t_column)
+            for i in range(1, rope_long):
+                t_row, t_column = calculate_tail_move(rope[i][0], rope[i][1],
+                                                      rope_after_move[i-1][0], rope_after_move[i-1][1])
+                rope_after_move.append([t_row, t_column])
+            
+            space = mark_as_visited(space, rope_after_move[rope_long - 1][0], rope_after_move[rope_long - 1][1])
 
-            h_row = new_h_row
-            h_column = new_h_colum
+            rope = rope_after_move
 
     return space
-
 
 def main() -> None:
     motions = read_input('2022/day9/input.txt')
 
-    visited_by_tail = follow_motions(motions)
-    positions_visited = visited_by_tail.sum()
+    visited_by_tail_2 = follow_motions(motions, 2)
+    positions_visited_2 = visited_by_tail_2.sum()
 
-    print(f'Tail has visited {positions_visited} positions')
+    print(f'Tail has visited {positions_visited_2} positions')
+
+    visited_by_tail_10 = follow_motions(motions, 10)
+    positions_visited_10 = visited_by_tail_10.sum()
+
+    print(f'Tail has visited {positions_visited_10} positions')
 
 if __name__ == "__main__":
     main()
