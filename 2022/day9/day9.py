@@ -29,7 +29,7 @@ def make_move(direction: str, row: int, column: int) -> np.matrix:
     return row, column
 
 
-def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
+def calculate_tail_move_v1(t_row: int, t_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
     new_t_row = None
     new_t_column = None
 
@@ -71,6 +71,38 @@ def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column:
 
     return new_t_row, new_t_column
 
+def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column: int) -> tuple[int, int]:
+    new_t_row = t_row
+    new_t_column = t_column
+
+
+    # Case H moves same row
+    if t_row == new_h_row:
+        if new_h_column < t_column - 1:
+            new_t_column = t_column - 1
+        elif new_h_column > t_column +1:
+            new_t_column = t_column + 1
+
+    # Case H moves same column
+    elif t_column == new_h_column:
+        if new_h_row < t_row -1:
+            new_t_row = t_row - 1
+        elif new_h_row > t_row + 1:
+            new_t_row = t_row + 1
+    # Diagonal
+    else:
+        if abs(t_row - new_h_row) != 1 or abs(t_column - new_h_column) != 1:
+            if new_h_row < t_row:
+                new_t_row = t_row -1
+            else:
+                new_t_row = t_row + 1
+
+            if new_h_column < t_column:
+                new_t_column = t_column - 1
+            else:
+                new_t_column = t_column + 1
+
+    return new_t_row, new_t_column
 def follow_motions(motions: list[list[str]], rope_long: int) -> np.matrix:
     space_size = 500
 
