@@ -40,9 +40,9 @@ def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column:
         if abs(t_column - new_h_column) <= 1:
             new_t_column = t_column
         elif new_h_column < t_column:
-            new_t_column = new_h_column + 1
+            new_t_column = t_column - 1
         else:
-            new_t_column = new_h_column - 1
+            new_t_column = t_column + 1
 
     # Case H moves same column
     elif t_column == new_h_column:
@@ -50,29 +50,24 @@ def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column:
         if abs(t_row - new_h_row ) <= 1:
             new_t_row = t_row
         elif new_h_row < t_row:
-            new_t_row = new_h_row + 1
+            new_t_row = t_row - 1
         else:
-            new_t_row = new_h_row - 1
+            new_t_row = t_row + 1
     # Diagonal
     else:
-        if abs(t_row - new_h_row)  + abs(t_column - new_h_column) <= 2:
+        if abs(t_row - new_h_row) == 1 and abs(t_column - new_h_column) == 1:
             new_t_row = t_row
             new_t_column = t_column
-
-        elif abs(t_row - new_h_row) <= 1:
-            new_t_row = new_h_row
+        else:
+            if new_h_row < t_row :
+                new_t_row = t_row -1
+            else:
+                new_t_row = t_row + 1
 
             if new_h_column < t_column:
-                new_t_column = new_h_column + 1
+                new_t_column = t_column - 1
             else:
-                new_t_column = new_h_column - 1
-        else:
-            new_t_column = new_h_column
-
-            if new_h_row < t_row:
-                new_t_row = new_h_row + 1
-            else:
-                new_t_row = new_h_row - 1 
+                new_t_column = t_column + 1
 
     return new_t_row, new_t_column
 
