@@ -53,6 +53,22 @@ def play_round(monkeys: list[dict], divide_by_three: bool = True, prod_mods: int
             if divide_by_three:
                 worry_level //= 3
             else:
+                '''
+                Part 2: to stop worry_level escalating to the point it can't be stored in a number, 
+                we need to truncate it. Because each monkey performs a predictable operation, 
+                addition or multiplication, there will be many numbers for which all monkeys behave 
+                the same way.
+                Each of the monkeys applies a simple function, such as addition or multiplication,
+                then divides by a particular prime; hence we can multiply each of these numbers 
+                together to get the point at which the rule behaviour repeats.
+                For each possible worry level, if f is the operation the monkey applies,
+
+                f(worry_level) % monkey_divisor = f(worry_level % lcm_divisorts) % monkey_divisor
+
+                is guaranteed to hold true. 
+
+                We are exploiting the property that for all integers k: a mod m = (a mod km) mod m
+                '''
                 worry_level %= prod_mods
 
             if worry_level % monkey['test'] == 0:
