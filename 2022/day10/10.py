@@ -27,7 +27,7 @@ def calculate_register_values(instructions: list[list[int]]) -> list[int]:
 
     return values
 
-def get_x_value(register_values: list[int], cycle: int) -> int:
+def get_signal_strength(register_values: list[int], cycle: int) -> int:
     return register_values[cycle - 1]*cycle
 
 def sum_signal_strenght(register_values: list[int]) -> int:
@@ -35,9 +35,32 @@ def sum_signal_strenght(register_values: list[int]) -> int:
     cycles = [20, 60, 100, 140, 180, 220]
 
     for i in cycles:
-        sum_signal += get_x_value(register_values, i)
+        sum_signal += get_signal_strength(register_values, i)
 
     return sum_signal
+
+def get_crt(register_values: list[int]) -> np.matrix:
+    crt = np.full((6, 40), '.')
+
+    for index, sprite_position in enumerate(register_values[:-1]):
+        row = int(index / 40)
+        column = index % 40
+
+        if column >= sprite_position - 1 and column <= sprite_position + 1:
+            crt[row][column] = '#'
+
+
+    return crt
+
+def pretty_crt(crt: np.matrix) -> str:
+    ctr_str = ''
+
+    for row in crt:
+        for value in row:
+            ctr_str += value
+        ctr_str += '\n'
+
+    return ctr_str
 
 def main() -> None:
     instructions = read_input('2022/day10/input.txt')
@@ -46,6 +69,9 @@ def main() -> None:
     sum_strenght = sum_signal_strenght(register_x_values)
 
     print(f'The sum of the signal strength is {sum_strenght}')
+
+    crt = get_crt(register_x_values)
+    print(pretty_crt(crt))
 
 if __name__ == "__main__":
     main()
