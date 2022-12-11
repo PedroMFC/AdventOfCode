@@ -103,14 +103,12 @@ def calculate_tail_move(t_row: int, t_column: int, new_h_row: int, new_h_column:
                 new_t_column = t_column + 1
 
     return new_t_row, new_t_column
-def follow_motions(motions: list[list[str]], rope_long: int) -> np.matrix:
-    space_size = 500
+def follow_motions(motions: list[list[str]], rope_long: int) -> set:
+    visited = set()
 
-    space = np.zeros((space_size, space_size))
+    rope = [ [0, 0]  for i in range(rope_long)]
 
-    rope = [ [space_size//2, space_size //2]  for i in range(rope_long)]
-
-    space = mark_as_visited(space, rope[0][0], rope[0][0])
+    visited.add( tuple([rope[0][0], rope[0][0]]) )
 
     for move in motions:
         for steps in range(int(move[1])):
@@ -122,22 +120,22 @@ def follow_motions(motions: list[list[str]], rope_long: int) -> np.matrix:
                                                       rope_after_move[i-1][0], rope_after_move[i-1][1])
                 rope_after_move.append([t_row, t_column])
             
-            space = mark_as_visited(space, rope_after_move[rope_long - 1][0], rope_after_move[rope_long - 1][1])
+            visited.add( tuple([rope_after_move[rope_long - 1][0], rope_after_move[rope_long - 1][1]]) )
 
             rope = rope_after_move
 
-    return space
+    return visited
 
 def main() -> None:
     motions = read_input('2022/day9/input.txt')
 
     visited_by_tail_2 = follow_motions(motions, 2)
-    positions_visited_2 = visited_by_tail_2.sum()
+    positions_visited_2 = len(visited_by_tail_2)
 
     print(f'Tail has visited {positions_visited_2} positions')
 
     visited_by_tail_10 = follow_motions(motions, 10)
-    positions_visited_10 = visited_by_tail_10.sum()
+    positions_visited_10 = len(visited_by_tail_10)
 
     print(f'Tail has visited {positions_visited_10} positions')
 
