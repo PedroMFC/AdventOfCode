@@ -26,10 +26,8 @@ class Node:
     def get_total_cost(self) -> int:
         return self.get_real_cost() + self.get_heuristic_cost()
 
-    def calculate_heuristic_cost(self, dest: tuple[int, int]) -> int:
+    def calculate_heuristic_cost(self, dest: tuple[int, int]) -> None:
         self.heuristic_cost = abs(self.postion[0] - dest[0]) + abs(self.postion[1] - dest[1])
-
-        return self.heuristic_cost
 
     def __cmp__(self, obj) -> int:
         if self.get_total_cost() < obj.get_total_cost():
@@ -59,15 +57,14 @@ def read_input(file_name: str) -> list[list[str]]:
 
     return area
 
-def calculate_position(area: list[list[str]], character: str) -> list[list[int]]:
-    postions = []
+def calculate_position(area: list[list[str]], character: str) -> tuple[int,int]:
 
     for i, row in enumerate(area):
         for j, value in enumerate(row):
             if value == character:
-                postions.append([i,j])
+                return (i,j)
 
-    return postions
+    return (None, None)
 
 
 def can_be_reached(origen: str, destino: str) -> bool:
@@ -209,11 +206,11 @@ def calculate_reverse_path(area: list[list[str]], start: tuple[int, int], search
 def main() -> None:
     area = read_input('2022/day12/input.txt')
 
-    path = calculate_path(area, calculate_position(area, 'S')[0], calculate_position(area, 'E')[0])
+    path = calculate_path(area, calculate_position(area, 'S'), calculate_position(area, 'E'))
     
     print(f'The fewest step from S required are {len(path)-1}')
 
-    a_path = calculate_reverse_path(area, calculate_position(area, 'E')[0], 'a')
+    a_path = calculate_reverse_path(area, calculate_position(area, 'E'), 'a')
 
     print(f'The fewest step from any a required are {len(a_path)-1}')
 
